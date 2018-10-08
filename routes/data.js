@@ -39,7 +39,7 @@ router.get('/read', function(req, res, next) {
 /**
  * 写入数据到json文件，供后台开发使用
  */
-router.get('/write', function(req, res, next) {
+router.post('/write', function(req, res, next) {
     // 存储数据的类型
     var type = req.param('type') || ''
     // 存储的数据参数
@@ -92,7 +92,7 @@ router.get('/write', function(req, res, next) {
 /**
  * 阅读模块配置接口，供后台开发者使用
  */
-router.post('write_config', function(req, res, newt) {
+router.post('/write_config', function(req, res, next) {
     // 下面这两部主要是为了验证数据
     // 防止xss攻击
     // 安装xss  npm install xss
@@ -100,7 +100,8 @@ router.post('write_config', function(req, res, newt) {
     var data = req.body.data
     var obj = JSON.parse(data)
     var newData = JSON.stringify(obj)
-    fs.write(PATH + 'config.json', newData, function(err) {
+    console.log(newData)
+    fs.writeFile(PATH + 'config.json', newData, function(err) {
         if (err) {
             return res.send({
                 status: 0,

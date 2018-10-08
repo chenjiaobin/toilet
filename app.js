@@ -7,19 +7,41 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var dataRouter = require('./routes/data');
-var session = require('express-session')
 
+var session = require('express-session')
+// session持久化中间件，即在设定的实效内session都有效
+var NedbStore = require('nedb-session-store')( session );
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(session({
-  secret: '#sddjswjdhww22ygfw2233@@@%#$!@%Q!%*12',
-  resave: false,
-  saveUninitialized: true
-}))
+// session持久化中间件配置
+const sessionMiddleware = session({
+    secret: "fas fas",// 加密key，可以随意填写
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      path: '/',
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000   // 一天
+    },
+    store: new NedbStore({
+      filename: 'path_to_nedb_persistence_file.db'
+    })
+  })
+  app.use(sessionMiddleware); // 加入配置好的中间件
+// session证书
+// app.use(session({
+//   secret: '#sddjswjdhww22ygfw2233@@@%#$!@%Q!%*12',
+//   resave: false,
+//   saveUninitialized: true
+// }))
+app.use(function(req, res, next){ 
+  res.locals.session = req.session;
+  next();
+  });
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
