@@ -38,6 +38,8 @@ router.get('/read', function(req, res, next) {
 
 /**
  * 写入数据到json文件，供后台开发使用
+ * data/write
+ * 参数：type,title,url,img
  */
 router.post('/write', function(req, res, next) {
     // 存储数据的类型
@@ -91,6 +93,7 @@ router.post('/write', function(req, res, next) {
 
 /**
  * 阅读模块配置接口，供后台开发者使用
+ * data/write_config
  */
 router.post('/write_config', function(req, res, next) {
     // 下面这两部主要是为了验证数据
